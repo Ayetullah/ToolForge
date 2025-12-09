@@ -1,0 +1,14 @@
+namespace UtilityTools.Domain.Enums;
+
+/// <summary>
+/// Background job status enumeration
+/// </summary>
+public enum JobStatus
+{
+    Pending = 0,
+    Processing = 1,
+    Completed = 2,
+    Failed = 3,
+    Cancelled = 4
+}
+

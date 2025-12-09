@@ -1,0 +1,74 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: utilitytools-postgres
+    environment:
+      POSTGRES_USER: utilitytools
+      POSTGRES_PASSWORD: utilitytools_dev_password
+      POSTGRES_DB: utilitytools
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U utilitytools"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  minio:
+    image: minio/minio:latest
+    container_name: utilitytools-minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin123
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: utilitytools-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=utilitytools;Username=utilitytools;Password=utilitytools_dev_password
+      - FileStorage__Type=Local
+      - FileStorage__LocalPath=/app/storage
+      - Jwt__SecretKey=your-super-secret-key-change-in-production-min-32-chars
+      - Jwt__Issuer=UtilityTools
+      - Jwt__Audience=UtilityTools
+      - Jwt__ExpirationMinutes=60
+      - Cache__DefaultExpirationMinutes=30
+      - Cache__SizeLimit=1024
+      - MinIO__Endpoint=http://minio:9000
+      - MinIO__AccessKey=minioadmin
+      - MinIO__SecretKey=minioadmin123
+      - MinIO__UseSSL=false
+      - MinIO__BucketName=utilitytools
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    volumes:
+      - ./storage:/app/storage
+
+volumes:
+  postgres_data:
+  minio_data:
+
