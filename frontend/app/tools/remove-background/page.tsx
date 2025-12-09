@@ -117,7 +117,7 @@ export default function RemoveBackgroundPage() {
           </div>
 
           <div>
-            <label className="flex items-center gap-2">
+            <label className="flex items-center gap-2 text-gray-800">
               <input
                 type="checkbox"
                 checked={transparent}

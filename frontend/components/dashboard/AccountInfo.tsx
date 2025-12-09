@@ -16,17 +16,17 @@ interface AccountInfoProps {
 export default function AccountInfo({ user }: AccountInfoProps) {
   return (
     <div className="bg-white rounded-lg shadow p-6">
-      <h2 className="text-xl font-semibold mb-4">Account Information</h2>
+      <h2 className="text-xl font-semibold text-gray-900 mb-4">Account Information</h2>
       <div className="space-y-2">
-        <p>
-          <span className="font-medium">Name:</span> {user?.firstName}{" "}
+        <p className="text-gray-800">
+          <span className="font-medium text-gray-900">Name:</span> {user?.firstName}{" "}
           {user?.lastName}
         </p>
-        <p>
-          <span className="font-medium">Email:</span> {user?.email}
+        <p className="text-gray-800">
+          <span className="font-medium text-gray-900">Email:</span> {user?.email}
         </p>
-        <p>
-          <span className="font-medium">Subscription:</span>{" "}
+        <p className="text-gray-800">
+          <span className="font-medium text-gray-900">Subscription:</span>{" "}
           <span
             className={`px-2 py-1 rounded text-sm ${
               user?.subscriptionTier === "Premium" ||
@@ -40,13 +40,13 @@ export default function AccountInfo({ user }: AccountInfoProps) {
           </span>
         </p>
         {user?.subscriptionExpiresAt && (
-          <p>
-            <span className="font-medium">Expires:</span>{" "}
+          <p className="text-gray-800">
+            <span className="font-medium text-gray-900">Expires:</span>{" "}
             {new Date(user.subscriptionExpiresAt).toLocaleDateString()}
           </p>
         )}
-        <p>
-          <span className="font-medium">Email Verified:</span>{" "}
+        <p className="text-gray-800">
+          <span className="font-medium text-gray-900">Email Verified:</span>{" "}
           {user?.isEmailVerified ? (
             <span className="text-green-600">✓ Verified</span>
           ) : (

@@ -73,7 +73,7 @@ export default function AdminDashboard() {
           router.push("/dashboard");
           return;
         }
-        console.error("Error fetching admin data:", error);
+        // Error handled silently
       } finally {
         setLoading(false);
       }
@@ -102,7 +102,7 @@ export default function AdminDashboard() {
       <Header title="UtilityTools Admin" onLogout={handleLogout} />
 
       <main className="container mx-auto px-4 py-12">
-        <h1 className="text-3xl font-bold mb-8">Admin Dashboard</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-8">Admin Dashboard</h1>
 
         <StatsCards stats={stats} />
 

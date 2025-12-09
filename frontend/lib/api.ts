@@ -109,33 +109,47 @@ class ApiClient {
   constructor(baseUrl: string) {
     this.baseUrl = baseUrl;
     if (typeof window !== "undefined") {
-      this.token = localStorage.getItem("token");
-      this.refreshToken = localStorage.getItem("refreshToken");
+      // Check both localStorage and sessionStorage for tokens
+      this.token = localStorage.getItem("token") || sessionStorage.getItem("token");
+      this.refreshToken = localStorage.getItem("refreshToken") || sessionStorage.getItem("refreshToken");
     }
   }
 
-  setToken(token: string | null) {
+  setToken(token: string | null, rememberMe: boolean = true) {
     this.token = token;
     if (typeof window !== "undefined") {
       if (token) {
-        localStorage.setItem("token", token);
+        // Use localStorage for rememberMe=true, sessionStorage for rememberMe=false
+        if (rememberMe) {
+          localStorage.setItem("token", token);
+        } else {
+          sessionStorage.setItem("token", token);
+        }
         // ✅ Also set cookie for Next.js middleware (server-side access)
-        document.cookie = `token=${token}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax`;
+        const maxAge = rememberMe ? 60 * 60 * 24 * 30 : 60 * 60 * 24 * 7; // 30 days or 7 days
+        document.cookie = `token=${token}; path=/; max-age=${maxAge}; SameSite=Lax`;
       } else {
         localStorage.removeItem("token");
+        sessionStorage.removeItem("token");
         // ✅ Remove cookie
         document.cookie = "token=; path=/; max-age=0";
       }
     }
   }
 
-  setRefreshToken(refreshToken: string | null) {
+  setRefreshToken(refreshToken: string | null, rememberMe: boolean = true) {
     this.refreshToken = refreshToken;
     if (typeof window !== "undefined") {
       if (refreshToken) {
-        localStorage.setItem("refreshToken", refreshToken);
+        // Use localStorage for rememberMe=true, sessionStorage for rememberMe=false
+        if (rememberMe) {
+          localStorage.setItem("refreshToken", refreshToken);
+        } else {
+          sessionStorage.setItem("refreshToken", refreshToken);
+        }
       } else {
         localStorage.removeItem("refreshToken");
+        sessionStorage.removeItem("refreshToken");
       }
     }
   }
@@ -146,6 +160,8 @@ class ApiClient {
     if (typeof window !== "undefined") {
       localStorage.removeItem("token");
       localStorage.removeItem("refreshToken");
+      sessionStorage.removeItem("token");
+      sessionStorage.removeItem("refreshToken");
       // ✅ Clear cookies
       document.cookie = "token=; path=/; max-age=0";
       document.cookie = "refreshToken=; path=/; max-age=0";
@@ -256,7 +272,7 @@ class ApiClient {
 
       return false;
     } catch (error) {
-      console.error("Error refreshing token:", error);
+      // Error refreshing token
       return false;
     }
   }
@@ -283,11 +299,14 @@ class ApiClient {
       headers["Authorization"] = `Bearer ${this.token}`;
     }
 
+    // Don't set Content-Type for FormData - browser will set it automatically with boundary
+
     try {
       const response = await fetch(url, {
         method: "POST",
         headers,
         body: formData,
+        credentials: "include", // Include cookies for CORS
       });
 
       // Check if response is JSON
@@ -313,19 +332,40 @@ class ApiClient {
       }
 
       if (!response.ok) {
+        // Build detailed error message
+        let errorMessage =
+          data.error ||
+          data.message ||
+          data.title ||
+          `Error ${response.status}: ${response.statusText}`;
+
+        // Add validation errors if present
+        if (data.errors && typeof data.errors === "object") {
+          const validationErrors = Object.entries(data.errors)
+            .map(
+              ([key, value]) =>
+                `${key}: ${Array.isArray(value) ? value.join(", ") : value}`
+            )
+            .join("; ");
+          if (validationErrors) {
+            errorMessage += ` (${validationErrors})`;
+          }
+        }
+
         return {
-          error:
-            data.error ||
-            data.message ||
-            data.title ||
-            `Error ${response.status}: ${response.statusText}`,
+          error: errorMessage,
         };
       }
 
       return { data };
     } catch (error) {
+      // Network error occurred
+
       return {
-        error: error instanceof Error ? error.message : "Network error",
+        error:
+          error instanceof Error
+            ? error.message
+            : "Network error occurred. Please check your connection and try again.",
       };
     }
   }
@@ -342,7 +382,7 @@ export const authApi = {
     lastName: string;
   }) => apiClient.post<RegisterResponse>("/api/auth/register", data),
 
-  login: (data: { email: string; password: string }) =>
+  login: (data: { email: string; password: string; rememberMe?: boolean }) =>
     apiClient.post<LoginResponse>("/api/auth/login", data),
 
   logout: () => {
@@ -355,7 +395,9 @@ export const authApi = {
     apiClient.post<RefreshTokenResponse>("/api/auth/refresh", data),
 
   forgotPassword: (email: string) =>
-    apiClient.post<ForgotPasswordResponse>("/api/auth/forgot-password", { email }),
+    apiClient.post<ForgotPasswordResponse>("/api/auth/forgot-password", {
+      email,
+    }),
 
   resetPassword: (data: {
     email: string;
@@ -367,7 +409,10 @@ export const authApi = {
     apiClient.post<VerifyEmailResponse>("/api/auth/verify-email", data),
 
   resendVerification: (email: string) =>
-    apiClient.post<ResendVerificationResponse>("/api/auth/resend-verification", { email }),
+    apiClient.post<ResendVerificationResponse>(
+      "/api/auth/resend-verification",
+      { email }
+    ),
 };
 
 // Tools API
@@ -407,10 +452,10 @@ export const toolsApi = {
   },
 
   formatJson: (json: string, indent?: number) =>
-    apiClient.post("/api/tools/json/format", { 
-      json, 
+    apiClient.post("/api/tools/json/format", {
+      json,
       indent: indent !== undefined && indent > 0,
-      indentSize: indent ?? 2
+      indentSize: indent ?? 2,
     }),
 
   summarize: (data: { text?: string; url?: string; maxLength?: number }) =>
@@ -423,7 +468,13 @@ export const toolsApi = {
     const formData = new FormData();
     formData.append("file", file);
     Object.keys(options).forEach((key) => {
-      formData.append(key, options[key]);
+      const value = options[key];
+      // Convert boolean to string for form data
+      if (typeof value === "boolean") {
+        formData.append(key, value.toString());
+      } else if (value !== null && value !== undefined) {
+        formData.append(key, value);
+      }
     });
     return apiClient.postFormData("/api/tools/excel/clean", formData);
   },
@@ -480,7 +531,9 @@ export const usersApi = {
     const params = new URLSearchParams();
     if (startDate) params.append("startDate", startDate);
     if (endDate) params.append("endDate", endDate);
-    return apiClient.get<UsageStatistics>(`/api/users/usage-statistics?${params.toString()}`);
+    return apiClient.get<UsageStatistics>(
+      `/api/users/usage-statistics?${params.toString()}`
+    );
   },
 };
 
@@ -497,7 +550,9 @@ export const adminApi = {
     params.append("pageSize", pageSize.toString());
     if (searchTerm) params.append("searchTerm", searchTerm);
     if (subscriptionTier) params.append("subscriptionTier", subscriptionTier);
-    return apiClient.get<GetAllUsersResponse>(`/api/admin/users?${params.toString()}`);
+    return apiClient.get<GetAllUsersResponse>(
+      `/api/admin/users?${params.toString()}`
+    );
   },
 
   getSystemStats: () => apiClient.get<SystemStats>("/api/admin/stats"),

@@ -67,8 +67,13 @@ export default function ExcelCleanPage() {
             ).signedDownloadUrl,
         });
       }
-    } catch {
-      setResult({ error: "Failed to clean Excel file. Please try again." });
+    } catch (error) {
+      setResult({
+        error:
+          error instanceof Error
+            ? error.message
+            : "Failed to clean Excel file. Please try again.",
+      });
     } finally {
       setUploading(false);
     }
@@ -82,7 +87,7 @@ export default function ExcelCleanPage() {
       <div className="bg-white rounded-lg shadow-lg p-8 max-w-4xl mx-auto">
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-semibold text-gray-900 mb-2">
               Select Excel File
             </label>
             <FileUpload
@@ -94,17 +99,18 @@ export default function ExcelCleanPage() {
           </div>
 
           <div className="space-y-3">
-            <label className="flex items-center gap-2">
+            <label className="flex items-center gap-2 text-gray-900 font-medium">
               <input
                 type="checkbox"
                 checked={options.removeEmptyRows}
                 onChange={(e) =>
                   setOptions({ ...options, removeEmptyRows: e.target.checked })
                 }
+                className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
               />
               <span>Remove empty rows</span>
             </label>
-            <label className="flex items-center gap-2">
+            <label className="flex items-center gap-2 text-gray-900 font-medium">
               <input
                 type="checkbox"
                 checked={options.removeEmptyColumns}
@@ -114,20 +120,22 @@ export default function ExcelCleanPage() {
                     removeEmptyColumns: e.target.checked,
                   })
                 }
+                className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
               />
               <span>Remove empty columns</span>
             </label>
-            <label className="flex items-center gap-2">
+            <label className="flex items-center gap-2 text-gray-900 font-medium">
               <input
                 type="checkbox"
                 checked={options.trimWhitespace}
                 onChange={(e) =>
                   setOptions({ ...options, trimWhitespace: e.target.checked })
                 }
+                className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
               />
               <span>Trim whitespace</span>
             </label>
-            <label className="flex items-center gap-2">
+            <label className="flex items-center gap-2 text-gray-900 font-medium">
               <input
                 type="checkbox"
                 checked={options.removeDuplicates}
@@ -137,10 +145,11 @@ export default function ExcelCleanPage() {
                     removeDuplicates: e.target.checked,
                   })
                 }
+                className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
               />
               <span>Remove duplicates</span>
             </label>
-            <label className="flex items-center gap-2">
+            <label className="flex items-center gap-2 text-gray-900 font-medium">
               <input
                 type="checkbox"
                 checked={options.standardizeFormats}
@@ -150,13 +159,14 @@ export default function ExcelCleanPage() {
                     standardizeFormats: e.target.checked,
                   })
                 }
+                className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
               />
               <span>Standardize formats</span>
             </label>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-semibold text-gray-900 mb-2">
               Output Format
             </label>
             <select
@@ -164,7 +174,7 @@ export default function ExcelCleanPage() {
               onChange={(e) =>
                 setOptions({ ...options, outputFormat: e.target.value })
               }
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 rounded-lg px-4 py-2 text-gray-900 bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             >
               <option value="xlsx">XLSX</option>
               <option value="xls">XLS</option>

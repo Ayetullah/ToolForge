@@ -107,7 +107,7 @@ export default function ResultDisplay({ result, loading }: ResultDisplayProps) {
           <CheckCircle className="w-5 h-5 text-green-600" />
           <p className="text-green-700 font-semibold">Summary</p>
         </div>
-        <p className="text-gray-700 whitespace-pre-wrap">{result.summary}</p>
+        <p className="text-gray-800 whitespace-pre-wrap">{result.summary}</p>
       </div>
     );
   }

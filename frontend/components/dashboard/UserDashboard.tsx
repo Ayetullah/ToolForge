@@ -37,7 +37,7 @@ export default function UserDashboard() {
           setUsageStats(statsResponse.data);
         }
       } catch (error) {
-        console.error("Error fetching dashboard data:", error);
+        // Error handled silently
       } finally {
         setLoading(false);
       }
@@ -70,8 +70,8 @@ export default function UserDashboard() {
 
       <main className="container mx-auto px-4 py-12">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Dashboard</h1>
-          <p className="text-gray-600">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Dashboard</h1>
+          <p className="text-gray-700">
             Welcome back! Choose a tool to get started.
           </p>
         </div>

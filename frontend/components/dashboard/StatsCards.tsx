@@ -66,8 +66,8 @@ export default function StatsCards({ stats }: StatsCardsProps) {
                 <Icon className={`w-6 h-6 ${card.iconColor}`} />
               </div>
               <div>
-                <p className="text-sm text-gray-600">{card.label}</p>
-                <p className="text-2xl font-bold">{card.value}</p>
+                <p className="text-sm text-gray-800 font-medium">{card.label}</p>
+                <p className="text-2xl font-bold text-gray-900">{card.value}</p>
               </div>
             </div>
           </div>

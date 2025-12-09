@@ -24,10 +24,20 @@ public class JobsController : ControllerBase
     {
         var query = new GetJobStatusQuery { JobId = jobId };
         var result = await _mediator.Send(query);
+        
+        // Handle error responses
         if (!string.IsNullOrEmpty(result.ErrorMessage))
         {
-            return NotFound(new { error = result.ErrorMessage });
+            if (result.Status == "not_found")
+            {
+                return NotFound(new { error = result.ErrorMessage, jobId = result.JobId });
+            }
+            if (result.Status == "unauthorized")
+            {
+                return Unauthorized(new { error = result.ErrorMessage, jobId = result.JobId });
+            }
         }
+        
         return Ok(result);
     }
 }

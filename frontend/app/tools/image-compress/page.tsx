@@ -109,7 +109,7 @@ export default function ImageCompressPage() {
                 onChange={(e) => setQuality(parseInt(e.target.value))}
                 className="w-full"
               />
-              <p className="text-xs text-gray-500 mt-1">{quality}%</p>
+              <p className="text-xs text-gray-700 mt-1 font-medium">{quality}%</p>
             </div>
 
             <div>
@@ -179,7 +179,7 @@ export default function ImageCompressPage() {
 
         <div className="mt-8 p-4 bg-blue-50 rounded-lg">
           <h3 className="font-semibold mb-2">Tips:</h3>
-          <ul className="list-disc list-inside space-y-1 text-sm text-gray-700">
+          <ul className="list-disc list-inside space-y-1 text-sm text-gray-800">
             <li>
               Lower quality = smaller file size, but may reduce image quality
             </li>

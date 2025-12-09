@@ -36,12 +36,12 @@ export default function UsersTable({
 }: UsersTableProps) {
   return (
     <div className="bg-white rounded-lg shadow">
-      <div className="p-6 border-b">
+        <div className="p-6 border-b">
         <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
-          <h2 className="text-xl font-semibold">Users</h2>
+          <h2 className="text-xl font-semibold text-gray-900">Users</h2>
           <div className="flex gap-4 w-full md:w-auto">
             <div className="relative flex-1 md:w-64">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-700" />
               <input
                 type="text"
                 placeholder="Search users..."
@@ -69,19 +69,19 @@ export default function UsersTable({
         <table className="w-full">
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
                 User
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
                 Subscription
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
                 Usage
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
                 Status
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
                 Joined
               </th>
             </tr>
@@ -94,7 +94,7 @@ export default function UsersTable({
                     <div className="text-sm font-medium text-gray-900">
                       {user.firstName} {user.lastName}
                     </div>
-                    <div className="text-sm text-gray-500">{user.email}</div>
+                    <div className="text-sm text-gray-700">{user.email}</div>
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
@@ -110,17 +110,17 @@ export default function UsersTable({
                     {user.subscriptionTier}
                   </span>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
                   {user.totalUsageCount} operations
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   {user.isEmailVerified ? (
-                    <span className="text-green-600">✓ Verified</span>
+                    <span className="text-green-600 font-medium">✓ Verified</span>
                   ) : (
-                    <span className="text-red-600">✗ Not Verified</span>
+                    <span className="text-red-600 font-medium">✗ Not Verified</span>
                   )}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
                   {new Date(user.createdAt).toLocaleDateString()}
                 </td>
               </tr>
@@ -130,7 +130,7 @@ export default function UsersTable({
       </div>
 
       <div className="p-6 border-t flex justify-between items-center">
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-gray-700">
           Showing page {page} of {totalPages}
         </p>
         <div className="flex gap-2">

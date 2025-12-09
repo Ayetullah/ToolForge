@@ -1,20 +1,68 @@
-import Link from 'next/link';
+import Link from "next/link";
 import Navigation from "@/components/common/Navigation";
 
 export default function ToolsPage() {
   const tools = [
-    { name: 'PDF Merge', description: 'Combine multiple PDF files into one', href: '/tools/pdf-merge', icon: '📄', category: 'PDF' },
-    { name: 'PDF Split', description: 'Split PDF into separate pages', href: '/tools/pdf-split', icon: '✂️', category: 'PDF' },
-    { name: 'Image Compress', description: 'Reduce image file size', href: '/tools/image-compress', icon: '🖼️', category: 'Image' },
-    { name: 'Remove Background', description: 'Remove image backgrounds', href: '/tools/remove-background', icon: '🎨', category: 'Image', premium: true },
-    { name: 'JSON Formatter', description: 'Format and validate JSON', href: '/tools/json-format', icon: '📋', category: 'Developer' },
-    { name: 'Excel Cleaner', description: 'Clean and optimize Excel files', href: '/tools/excel-clean', icon: '📊', category: 'Document' },
-    { name: 'Regex Generator', description: 'Generate regex patterns', href: '/tools/regex-generate', icon: '🔍', category: 'Developer' },
-    { name: 'Video Compress', description: 'Compress video files', href: '/tools/video-compress', icon: '🎬', category: 'Media' },
-    { name: 'Doc to PDF', description: 'Convert documents to PDF', href: '/tools/doc-to-pdf', icon: '📑', category: 'Document' },
+    {
+      name: "PDF Merge",
+      description: "Combine multiple PDF files into one",
+      href: "/tools/pdf-merge",
+      icon: "📄",
+      category: "PDF",
+    },
+    {
+      name: "PDF Split",
+      description: "Split PDF into separate pages",
+      href: "/tools/pdf-split",
+      icon: "✂️",
+      category: "PDF",
+    },
+    {
+      name: "Image Compress",
+      description: "Reduce image file size",
+      href: "/tools/image-compress",
+      icon: "🖼️",
+      category: "Image",
+    },
+    {
+      name: "Remove Background",
+      description: "Remove image backgrounds",
+      href: "/tools/remove-background",
+      icon: "🎨",
+      category: "Image",
+      premium: true,
+    },
+    {
+      name: "JSON Formatter",
+      description: "Format and validate JSON",
+      href: "/tools/json-format",
+      icon: "📋",
+      category: "Developer",
+    },
+    {
+      name: "Excel Cleaner",
+      description: "Clean and optimize Excel files",
+      href: "/tools/excel-clean",
+      icon: "📊",
+      category: "Document",
+    },
+    {
+      name: "Regex Generator",
+      description: "Generate regex patterns",
+      href: "/tools/regex-generate",
+      icon: "🔍",
+      category: "Developer",
+    },
+    {
+      name: "Doc to PDF",
+      description: "Convert documents to PDF",
+      href: "/tools/doc-to-pdf",
+      icon: "📑",
+      category: "Document",
+    },
   ];
 
-  const categories = ['All', 'PDF', 'Image', 'Document', 'Developer', 'AI', 'Media'];
+  const categories = ["All", "PDF", "Image", "Document", "Developer", "AI"];
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -29,7 +77,7 @@ export default function ToolsPage() {
 
       <main className="container mx-auto px-4 py-12">
         <h1 className="text-4xl font-bold mb-4">All Tools</h1>
-        <p className="text-gray-600 mb-8">Choose a tool to get started</p>
+        <p className="text-gray-800 mb-8">Choose a tool to get started</p>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {tools.map((tool, index) => (
@@ -44,9 +92,9 @@ export default function ToolsPage() {
                 </span>
               )}
               <div className="text-4xl mb-4">{tool.icon}</div>
-              <div className="text-sm text-blue-600 mb-2">{tool.category}</div>
-              <h3 className="text-xl font-semibold mb-2">{tool.name}</h3>
-              <p className="text-gray-600">{tool.description}</p>
+              <div className="text-sm text-blue-600 mb-2 font-medium">{tool.category}</div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">{tool.name}</h3>
+              <p className="text-gray-700">{tool.description}</p>
             </Link>
           ))}
         </div>
@@ -54,4 +102,3 @@ export default function ToolsPage() {
     </div>
   );
 }
-

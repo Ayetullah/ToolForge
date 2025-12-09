@@ -9,6 +9,7 @@ function LoginForm() {
   const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -18,7 +19,7 @@ function LoginForm() {
     setLoading(true);
 
     try {
-      const response = await authApi.login({ email, password });
+      const response = await authApi.login({ email, password, rememberMe });
 
       if (response.error) {
         setError(response.error);
@@ -29,10 +30,10 @@ function LoginForm() {
       // ✅ Type-safe response handling
       const loginData = response.data as LoginResponse | undefined;
       if (loginData && loginData.accessToken) {
-        // ✅ Save both access token and refresh token
-        apiClient.setToken(loginData.accessToken);
+        // ✅ Save both access token and refresh token with rememberMe preference
+        apiClient.setToken(loginData.accessToken, rememberMe);
         if (loginData.refreshToken) {
-          apiClient.setRefreshToken(loginData.refreshToken);
+          apiClient.setRefreshToken(loginData.refreshToken, rememberMe);
         }
 
         // ✅ Get redirect path from query params or determine based on user role
@@ -55,8 +56,7 @@ function LoginForm() {
         setError(response.error || "Login failed. Please try again.");
         setLoading(false);
       }
-    } catch (error) {
-      console.error("Login error:", error);
+    } catch {
       setError("An unexpected error occurred. Please try again.");
       setLoading(false);
     }
@@ -75,7 +75,7 @@ function LoginForm() {
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
             Sign in to your account
           </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
+          <p className="mt-2 text-center text-sm text-gray-700">
             Or{" "}
             <Link
               href="/register"
@@ -132,6 +132,8 @@ function LoginForm() {
                 id="remember-me"
                 name="remember-me"
                 type="checkbox"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
                 className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
               />
               <label
@@ -174,7 +176,7 @@ export default function LoginPage() {
         <div className="min-h-screen bg-gray-50 flex items-center justify-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-            <p className="mt-4 text-gray-600">Loading...</p>
+            <p className="mt-4 text-gray-800">Loading...</p>
           </div>
         </div>
       }

@@ -23,25 +23,25 @@ export default function Header({
           {title}
         </Link>
         <nav className="flex gap-6 items-center">
-          <Link href="/tools" className="text-gray-600 hover:text-gray-900">
+          <Link href="/tools" className="text-gray-700 hover:text-gray-900 font-medium">
             Tools
           </Link>
           {showAdminLink && (
             <Link
               href="/admin/dashboard"
-              className="text-gray-600 hover:text-gray-900"
+              className="text-gray-700 hover:text-gray-900 font-medium"
             >
               Admin Dashboard
             </Link>
           )}
           {showDashboard && (
-            <Link href="/dashboard" className="text-gray-600 hover:text-gray-900">
+            <Link href="/dashboard" className="text-gray-700 hover:text-gray-900 font-medium">
               Dashboard
             </Link>
           )}
           <button
             onClick={onLogout}
-            className="flex items-center gap-2 text-gray-600 hover:text-gray-900"
+            className="flex items-center gap-2 text-gray-700 hover:text-gray-900 font-medium"
           >
             <LogOut className="w-5 h-5" />
             Logout

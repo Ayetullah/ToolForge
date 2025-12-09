@@ -39,7 +39,7 @@ export default function RegisterPage() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4">
         <div className="max-w-md w-full bg-white p-8 rounded-lg shadow">
           <h2 className="text-2xl font-bold mb-4">Registration Successful!</h2>
-          <p className="text-gray-600 mb-4">
+          <p className="text-gray-800 mb-4">
             Please check your email to verify your account before logging in.
           </p>
           <Link
@@ -63,7 +63,7 @@ export default function RegisterPage() {
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
             Create your account
           </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
+          <p className="mt-2 text-center text-sm text-gray-700">
             Or{' '}
             <Link href="/login" className="font-medium text-blue-600 hover:text-blue-500">
               sign in to existing account

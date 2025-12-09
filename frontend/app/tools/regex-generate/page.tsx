@@ -117,7 +117,7 @@ export default function RegexGeneratePage() {
               {result.explanation && (
                 <div>
                   <h3 className="font-semibold mb-2">Explanation:</h3>
-                  <p className="text-gray-700">{result.explanation}</p>
+                  <p className="text-gray-800">{result.explanation}</p>
                 </div>
               )}
             </div>

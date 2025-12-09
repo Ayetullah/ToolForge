@@ -131,7 +131,7 @@ export default function VideoCompressPage() {
                 onChange={(e) => setCrf(parseInt(e.target.value))}
                 className="w-full"
               />
-              <p className="text-xs text-gray-500 mt-1">{crf}</p>
+              <p className="text-xs text-gray-700 mt-1 font-medium">{crf}</p>
             </div>
 
             <div>

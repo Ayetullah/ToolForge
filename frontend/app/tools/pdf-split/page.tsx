@@ -89,7 +89,7 @@ export default function PdfSplitPage() {
               placeholder="all or 1-5,10,15-20"
               className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-gray-700 mt-1">
               Examples: &quot;all&quot; for all pages, &quot;1-5&quot; for pages
               1 to 5, &quot;1-5,10,15-20&quot; for multiple ranges
             </p>
@@ -120,7 +120,7 @@ export default function PdfSplitPage() {
 
         <div className="mt-8 p-4 bg-blue-50 rounded-lg">
           <h3 className="font-semibold mb-2">How it works:</h3>
-          <ol className="list-decimal list-inside space-y-1 text-sm text-gray-700">
+          <ol className="list-decimal list-inside space-y-1 text-sm text-gray-800">
             <li>Select a PDF file to split</li>
             <li>
               Specify which pages to extract (use &quot;all&quot; for all pages)

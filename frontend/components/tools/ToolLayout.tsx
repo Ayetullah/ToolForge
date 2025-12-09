@@ -32,18 +32,18 @@ export default function ToolLayout({
             UtilityTools
           </Link>
           <nav className="flex gap-6 items-center">
-            <Link href="/tools" className="text-gray-600 hover:text-gray-900">
+            <Link href="/tools" className="text-gray-700 hover:text-gray-900 font-medium">
               Tools
             </Link>
             <Link
               href="/dashboard"
-              className="text-gray-600 hover:text-gray-900"
+              className="text-gray-700 hover:text-gray-900 font-medium"
             >
               Dashboard
             </Link>
             <button
               onClick={handleLogout}
-              className="flex items-center gap-2 text-gray-600 hover:text-gray-900"
+              className="flex items-center gap-2 text-gray-700 hover:text-gray-900 font-medium"
             >
               <LogOut className="w-5 h-5" />
               Logout
@@ -54,8 +54,8 @@ export default function ToolLayout({
 
       <main className="container mx-auto px-4 py-12">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">{title}</h1>
-          <p className="text-gray-600">{description}</p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">{title}</h1>
+          <p className="text-gray-700">{description}</p>
         </div>
 
         {children}

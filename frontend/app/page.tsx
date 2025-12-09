@@ -1,8 +1,21 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ArrowRight, Check, Zap, Shield, Globe } from "lucide-react";
 import Navigation from "@/components/common/Navigation";
+import { apiClient } from "@/lib/api";
 
 export default function HomePage() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    // Check if user is authenticated
+    const token = typeof window !== "undefined" 
+      ? (localStorage.getItem("token") || sessionStorage.getItem("token"))
+      : null;
+    setIsAuthenticated(!!token);
+  }, []);
   const tools = [
     {
       name: "PDF Merge",
@@ -39,12 +52,6 @@ export default function HomePage() {
       description: "Generate regex patterns",
       href: "/tools/regex-generate",
       icon: "🔍",
-    },
-    {
-      name: "Video Compress",
-      description: "Compress video files",
-      href: "/tools/video-compress",
-      icon: "🎬",
     },
     {
       name: "Doc to PDF",
@@ -92,24 +99,44 @@ export default function HomePage() {
           All Your Utility Tools
           <span className="text-blue-600"> In One Place</span>
         </h1>
-        <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+        <p className="text-xl text-gray-700 mb-8 max-w-2xl mx-auto">
           Powerful, fast, and secure tools for PDF, images, documents, and more.
           No installation required.
         </p>
         <div className="flex gap-4 justify-center">
-          <Link
-            href="/register"
-            className="bg-blue-600 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 flex items-center gap-2"
-          >
-            Get Started Free
-            <ArrowRight className="w-5 h-5" />
-          </Link>
-          <Link
-            href="/tools"
-            className="border border-gray-300 text-gray-700 px-8 py-3 rounded-lg text-lg font-semibold hover:bg-gray-50"
-          >
-            Browse Tools
-          </Link>
+          {isAuthenticated ? (
+            <>
+              <Link
+                href="/dashboard"
+                className="bg-blue-600 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 flex items-center gap-2"
+              >
+                Go to Dashboard
+                <ArrowRight className="w-5 h-5" />
+              </Link>
+              <Link
+                href="/tools"
+                className="border border-gray-300 text-gray-700 px-8 py-3 rounded-lg text-lg font-semibold hover:bg-gray-50"
+              >
+                Browse Tools
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link
+                href="/register"
+                className="bg-blue-600 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 flex items-center gap-2"
+              >
+                Get Started Free
+                <ArrowRight className="w-5 h-5" />
+              </Link>
+              <Link
+                href="/tools"
+                className="border border-gray-300 text-gray-700 px-8 py-3 rounded-lg text-lg font-semibold hover:bg-gray-50"
+              >
+                Browse Tools
+              </Link>
+            </>
+          )}
         </div>
       </section>
 
@@ -121,8 +148,8 @@ export default function HomePage() {
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <feature.icon className="w-8 h-8 text-blue-600" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
-              <p className="text-gray-600">{feature.description}</p>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">{feature.title}</h3>
+              <p className="text-gray-700">{feature.description}</p>
             </div>
           ))}
         </div>
@@ -130,7 +157,7 @@ export default function HomePage() {
 
       {/* Tools Grid */}
       <section className="container mx-auto px-4 py-16">
-        <h2 className="text-3xl font-bold text-center mb-12">All Tools</h2>
+        <h2 className="text-3xl font-bold text-gray-900 text-center mb-12">All Tools</h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {tools.map((tool, index) => (
             <Link
@@ -139,8 +166,8 @@ export default function HomePage() {
               className="border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-shadow hover:border-blue-300"
             >
               <div className="text-4xl mb-4">{tool.icon}</div>
-              <h3 className="text-xl font-semibold mb-2">{tool.name}</h3>
-              <p className="text-gray-600">{tool.description}</p>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">{tool.name}</h3>
+              <p className="text-gray-700">{tool.description}</p>
             </Link>
           ))}
         </div>
@@ -170,13 +197,13 @@ export default function HomePage() {
               <h3 className="text-xl font-bold text-blue-600 mb-4">
                 UtilityTools
               </h3>
-              <p className="text-gray-600">
+              <p className="text-gray-700">
                 Powerful utility tools for your everyday needs.
               </p>
             </div>
             <div>
-              <h4 className="font-semibold mb-4">Tools</h4>
-              <ul className="space-y-2 text-gray-600">
+              <h4 className="font-semibold text-gray-900 mb-4">Tools</h4>
+              <ul className="space-y-2 text-gray-700">
                 <li>
                   <Link href="/tools/pdf-merge" className="hover:text-blue-600">
                     PDF Merge
@@ -199,7 +226,7 @@ export default function HomePage() {
             </div>
             <div>
               <h4 className="font-semibold mb-4">Company</h4>
-              <ul className="space-y-2 text-gray-600">
+              <ul className="space-y-2 text-gray-700">
                 <li>
                   <Link href="/pricing" className="hover:text-blue-600">
                     Pricing
@@ -218,8 +245,8 @@ export default function HomePage() {
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold mb-4">Legal</h4>
-              <ul className="space-y-2 text-gray-600">
+              <h4 className="font-semibold text-gray-900 mb-4">Legal</h4>
+              <ul className="space-y-2 text-gray-700">
                 <li>
                   <Link href="/privacy" className="hover:text-blue-600">
                     Privacy
@@ -233,7 +260,7 @@ export default function HomePage() {
               </ul>
             </div>
           </div>
-          <div className="border-t mt-8 pt-8 text-center text-gray-600">
+          <div className="border-t mt-8 pt-8 text-center text-gray-700">
             <p>&copy; 2024 UtilityTools. All rights reserved.</p>
           </div>
         </div>

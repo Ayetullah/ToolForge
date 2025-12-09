@@ -31,7 +31,7 @@ public class JwtTokenService : IJwtTokenService
         }
     }
     
-    public string GenerateToken(User user)
+    public string GenerateToken(User user, int? expirationMinutes = null)
     {
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_settings.SecretKey));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -45,11 +45,14 @@ public class JwtTokenService : IJwtTokenService
             new Claim("user_id", user.Id.ToString())
         };
         
+        // Use provided expiration or default from settings
+        var expiration = expirationMinutes ?? _settings.ExpirationMinutes;
+        
         var token = new JwtSecurityToken(
             issuer: _settings.Issuer,
             audience: _settings.Audience,
             claims: claims,
-            expires: DateTime.UtcNow.AddMinutes(_settings.ExpirationMinutes),
+            expires: DateTime.UtcNow.AddMinutes(expiration),
             signingCredentials: credentials);
         
         return new JwtSecurityTokenHandler().WriteToken(token);

@@ -32,13 +32,23 @@ public class GetJobStatusQueryHandler : IRequestHandler<GetJobStatusQuery, GetJo
 
         if (job == null)
         {
-            throw new KeyNotFoundException($"Job with ID {request.JobId} not found");
+            return new GetJobStatusResponse
+            {
+                JobId = request.JobId,
+                Status = "not_found",
+                ErrorMessage = $"Job with ID {request.JobId} not found"
+            };
         }
 
         // Verify user owns the job
         if (userId.HasValue && job.UserId != userId.Value)
         {
-            throw new UnauthorizedAccessException("You do not have access to this job");
+            return new GetJobStatusResponse
+            {
+                JobId = request.JobId,
+                Status = "unauthorized",
+                ErrorMessage = "You do not have access to this job"
+            };
         }
 
         return new GetJobStatusResponse

@@ -119,11 +119,11 @@ public class ToolsController : ControllerBase
     [HttpPost("excel/clean")]
     public async Task<ActionResult<CleanExcelResponse>> CleanExcel(
         [FromForm] IFormFile file,
-        [FromForm] bool? removeEmptyRows = true,
-        [FromForm] bool? removeEmptyColumns = true,
-        [FromForm] bool? trimWhitespace = true,
-        [FromForm] bool? removeDuplicates = false,
-        [FromForm] bool? standardizeFormats = true,
+        [FromForm] string? removeEmptyRows = null,
+        [FromForm] string? removeEmptyColumns = null,
+        [FromForm] string? trimWhitespace = null,
+        [FromForm] string? removeDuplicates = null,
+        [FromForm] string? standardizeFormats = null,
         [FromForm] string? outputFormat = null)
     {
         if (file == null)
@@ -131,13 +131,18 @@ public class ToolsController : ControllerBase
             return BadRequest(new { error = "Excel file is required" });
         }
 
+        // Parse boolean values from form data (they come as strings)
+        bool ParseBool(string? value, bool defaultValue) => 
+            value == null ? defaultValue : 
+            (value.Equals("true", StringComparison.OrdinalIgnoreCase) || value == "1");
+
         var options = new CleanOptions
         {
-            RemoveEmptyRows = removeEmptyRows ?? true,
-            RemoveEmptyColumns = removeEmptyColumns ?? true,
-            TrimWhitespace = trimWhitespace ?? true,
-            RemoveDuplicates = removeDuplicates ?? false,
-            StandardizeFormats = standardizeFormats ?? true,
+            RemoveEmptyRows = ParseBool(removeEmptyRows, true),
+            RemoveEmptyColumns = ParseBool(removeEmptyColumns, true),
+            TrimWhitespace = ParseBool(trimWhitespace, true),
+            RemoveDuplicates = ParseBool(removeDuplicates, false),
+            StandardizeFormats = ParseBool(standardizeFormats, true),
             OutputFormat = outputFormat
         };
 

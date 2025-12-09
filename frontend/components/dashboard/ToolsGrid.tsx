@@ -4,7 +4,6 @@ import Link from "next/link";
 import {
   FileText,
   Image as ImageIcon,
-  Video,
   FileSpreadsheet,
   LucideIcon,
 } from "lucide-react";
@@ -30,7 +29,6 @@ const tools: Tool[] = [
   { name: "Excel Clean", href: "/tools/excel-clean", icon: FileSpreadsheet },
   { name: "JSON Format", href: "/tools/json-format", icon: FileText },
   { name: "Regex Generate", href: "/tools/regex-generate", icon: FileText },
-  { name: "Video Compress", href: "/tools/video-compress", icon: Video },
 ];
 
 export default function ToolsGrid() {
@@ -49,9 +47,9 @@ export default function ToolsGrid() {
                 <Icon className="w-6 h-6 text-blue-600" />
               </div>
               <div className="flex-1">
-                <h3 className="font-semibold text-lg">{tool.name}</h3>
+                <h3 className="font-semibold text-lg text-gray-900">{tool.name}</h3>
                 {tool.premium && (
-                  <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded">
+                  <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded font-medium">
                     Premium
                   </span>
                 )}

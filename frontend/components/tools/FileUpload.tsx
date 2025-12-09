@@ -49,9 +49,9 @@ export default function FileUpload({
           htmlFor="file-upload"
           className="cursor-pointer flex flex-col items-center gap-2"
         >
-          <Upload className="w-12 h-12 text-gray-400" />
-          <span className="text-gray-600 font-medium">{label}</span>
-          <span className="text-sm text-gray-500">
+          <Upload className="w-12 h-12 text-gray-700" />
+          <span className="text-gray-800 font-medium">{label}</span>
+          <span className="text-sm text-gray-700">
             {multiple && maxFiles
               ? `Up to ${maxFiles} files`
               : "Click to select"}
@@ -67,8 +67,8 @@ export default function FileUpload({
               className="flex items-center justify-between bg-white p-3 rounded-lg border"
             >
               <div className="flex-1">
-                <p className="font-medium text-sm">{file.name}</p>
-                <p className="text-xs text-gray-500">
+                <p className="font-semibold text-sm text-gray-900">{file.name}</p>
+                <p className="text-xs text-gray-800 font-medium">
                   {(file.size / 1024 / 1024).toFixed(2)} MB
                 </p>
               </div>

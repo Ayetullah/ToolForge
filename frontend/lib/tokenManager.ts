@@ -23,9 +23,8 @@ function decodeToken(token: string): TokenPayload | null {
         .join("")
     );
     return JSON.parse(jsonPayload);
-  } catch (error) {
-    console.error("Error decoding token:", error);
-    return null;
+    } catch (error) {
+      return null;
   }
 }
 
@@ -55,8 +54,9 @@ export function initializeTokenRefresh(): () => void {
   const checkAndRefreshToken = async () => {
     if (typeof window === "undefined") return;
 
-    const token = localStorage.getItem("token");
-    const refreshToken = localStorage.getItem("refreshToken");
+    // Check both localStorage and sessionStorage for tokens
+    const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+    const refreshToken = localStorage.getItem("refreshToken") || sessionStorage.getItem("refreshToken");
 
     if (!token || !refreshToken) {
       return;
@@ -83,7 +83,6 @@ export function initializeTokenRefresh(): () => void {
             if (data.refreshToken) {
               apiClient.setRefreshToken(data.refreshToken);
             }
-            console.log("Token refreshed successfully");
           }
         } else {
           // Refresh failed, clear tokens
@@ -93,7 +92,6 @@ export function initializeTokenRefresh(): () => void {
           }
         }
       } catch (error) {
-        console.error("Error refreshing token:", error);
         apiClient.clearTokens();
       }
     }

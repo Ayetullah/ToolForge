@@ -7,7 +7,7 @@
 
   <ItemGroup>
     <PackageReference Include="AWSSDK.S3" Version="3.7.400.48" />
-    <PackageReference Include="EPPlus" Version="8.3.1" />
+    <PackageReference Include="EPPlus" Version="6.2.10" />
     <PackageReference Include="Hangfire.AspNetCore" Version="1.8.17" />
     <PackageReference Include="Hangfire.Core" Version="1.8.17" />
     <PackageReference Include="Hangfire.PostgreSql" Version="1.20.6" />
