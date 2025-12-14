@@ -141,7 +141,7 @@ export default function VideoCompressPage() {
               <select
                 value={preset}
                 onChange={(e) => setPreset(e.target.value)}
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-700 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
               >
                 <option value="ultrafast">Ultrafast</option>
                 <option value="superfast">Superfast</option>
@@ -164,7 +164,7 @@ export default function VideoCompressPage() {
                 value={maxWidth}
                 onChange={(e) => setMaxWidth(e.target.value)}
                 placeholder="e.g., 1920"
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-700 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 placeholder:text-gray-500"
               />
             </div>
 
@@ -177,7 +177,7 @@ export default function VideoCompressPage() {
                 value={maxHeight}
                 onChange={(e) => setMaxHeight(e.target.value)}
                 placeholder="e.g., 1080"
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-700 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 placeholder:text-gray-500"
               />
             </div>
           </div>

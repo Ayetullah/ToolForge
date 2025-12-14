@@ -59,7 +59,8 @@ export default function RemoveBackgroundPage() {
         setUploading(false);
         setJobStatus(null);
         setResult({
-          error: "Background removal timed out. Please try again or contact support.",
+          error:
+            "Background removal timed out. Please try again or contact support.",
         });
         return;
       }
@@ -167,12 +168,12 @@ export default function RemoveBackgroundPage() {
         setResult({ error: response.error });
         setUploading(false);
       } else if (response.data) {
-        const data = response.data as { 
-          jobId?: string; 
+        const data = response.data as {
+          jobId?: string;
           status?: string;
           errorMessage?: string;
         };
-        
+
         // Check if there's an error message (e.g., daily limit exceeded)
         if (data.errorMessage) {
           setResult({ error: data.errorMessage });
@@ -180,13 +181,20 @@ export default function RemoveBackgroundPage() {
         } else if (data.jobId) {
           setJobId(data.jobId);
         } else if (data.status === "failed") {
-          setResult({ error: data.errorMessage || "Background removal failed" });
+          setResult({
+            error: data.errorMessage || "Background removal failed",
+          });
           setUploading(false);
         }
       }
     } catch (error) {
-      const errorMessage = 
-        (error as { response?: { data?: { errorMessage?: string } }; message?: string })?.response?.data?.errorMessage ||
+      const errorMessage =
+        (
+          error as {
+            response?: { data?: { errorMessage?: string } };
+            message?: string;
+          }
+        )?.response?.data?.errorMessage ||
         (error as { message?: string })?.message ||
         "Failed to remove background. Please try again.";
       setResult({ error: errorMessage });
@@ -240,7 +248,7 @@ export default function RemoveBackgroundPage() {
                 value={backgroundColor}
                 onChange={(e) => setBackgroundColor(e.target.value)}
                 placeholder="#FFFFFF"
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-700 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 placeholder:text-gray-500"
               />
             </div>
           )}
@@ -271,7 +279,9 @@ export default function RemoveBackgroundPage() {
             jobStatus.toLowerCase() !== JobStatus.Failed.toString() && (
               <div className="mt-4 text-sm text-gray-800">
                 Job Status:{" "}
-                <span className="font-semibold capitalize text-gray-900">{jobStatus}</span>
+                <span className="font-semibold capitalize text-gray-900">
+                  {jobStatus}
+                </span>
               </div>
             )}
         </div>

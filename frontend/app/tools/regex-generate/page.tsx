@@ -69,7 +69,7 @@ export default function RegexGeneratePage() {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="e.g., Match email addresses"
-              className="w-full border border-gray-300 rounded-lg px-4 py-3 h-32 focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-700 rounded-lg px-4 py-3 h-32 focus:ring-2 focus:ring-blue-500 placeholder:text-gray-500"
             />
           </div>
 
@@ -82,7 +82,7 @@ export default function RegexGeneratePage() {
               value={examples}
               onChange={(e) => setExamples(e.target.value)}
               placeholder="example1@email.com, example2@email.com"
-              className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-700 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 placeholder:text-gray-500"
             />
           </div>
 

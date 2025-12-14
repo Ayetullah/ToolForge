@@ -87,7 +87,7 @@ export default function PdfSplitPage() {
               value={pagesSpec}
               onChange={(e) => setPagesSpec(e.target.value)}
               placeholder="all or 1-5,10,15-20"
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full border border-gray-700 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder:text-gray-500"
             />
             <p className="text-xs text-gray-700 mt-1">
               Examples: &quot;all&quot; for all pages, &quot;1-5&quot; for pages

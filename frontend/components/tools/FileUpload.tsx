@@ -36,7 +36,7 @@ export default function FileUpload({
 
   return (
     <div className="space-y-4">
-      <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-400 transition-colors">
+      <div className="border-2 border-dashed border-gray-700 rounded-lg p-8 text-center hover:border-blue-400 transition-colors">
         <input
           type="file"
           id="file-upload"

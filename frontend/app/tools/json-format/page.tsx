@@ -60,7 +60,7 @@ export default function JsonFormatPage() {
               value={jsonInput}
               onChange={(e) => setJsonInput(e.target.value)}
               placeholder='{"key": "value"}'
-              className="w-full border border-gray-300 rounded-lg px-4 py-3 font-mono text-sm h-64 focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-700 rounded-lg px-4 py-3 font-mono text-sm h-64 focus:ring-2 focus:ring-blue-500 placeholder:text-gray-500"
             />
           </div>
 
@@ -74,7 +74,7 @@ export default function JsonFormatPage() {
               max="8"
               value={indent}
               onChange={(e) => setIndent(parseInt(e.target.value))}
-              className="w-32 border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
+              className="w-32 border border-gray-700 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
             />
           </div>
 

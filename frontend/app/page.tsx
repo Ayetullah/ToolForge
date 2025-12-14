@@ -118,7 +118,7 @@ export default function HomePage() {
               </Link>
               <Link
                 href="/tools"
-                className="border border-gray-300 text-gray-700 px-8 py-3 rounded-lg text-lg font-semibold hover:bg-gray-50"
+                className="border border-gray-700 text-gray-700 px-8 py-3 rounded-lg text-lg font-semibold hover:bg-gray-50"
               >
                 Browse Tools
               </Link>
@@ -134,7 +134,7 @@ export default function HomePage() {
               </Link>
               <Link
                 href="/tools"
-                className="border border-gray-300 text-gray-700 px-8 py-3 rounded-lg text-lg font-semibold hover:bg-gray-50"
+                className="border border-gray-700 text-gray-700 px-8 py-3 rounded-lg text-lg font-semibold hover:bg-gray-50"
               >
                 Browse Tools
               </Link>
@@ -236,7 +236,7 @@ export default function HomePage() {
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold mb-4">Company</h4>
+              <h4 className="font-semibold text-gray-900 mb-4">Company</h4>
               <ul className="space-y-2 text-gray-700">
                 {/* Pricing temporarily disabled */}
                 {/* <li>

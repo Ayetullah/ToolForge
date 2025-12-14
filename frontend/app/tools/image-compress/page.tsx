@@ -109,7 +109,9 @@ export default function ImageCompressPage() {
                 onChange={(e) => setQuality(parseInt(e.target.value))}
                 className="w-full"
               />
-              <p className="text-xs text-gray-700 mt-1 font-medium">{quality}%</p>
+              <p className="text-xs text-gray-700 mt-1 font-medium">
+                {quality}%
+              </p>
             </div>
 
             <div>
@@ -119,7 +121,7 @@ export default function ImageCompressPage() {
               <select
                 value={targetFormat}
                 onChange={(e) => setTargetFormat(e.target.value)}
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-700 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
               >
                 <option value="jpg">JPG</option>
                 <option value="png">PNG</option>
@@ -136,7 +138,7 @@ export default function ImageCompressPage() {
                 value={maxWidth}
                 onChange={(e) => setMaxWidth(e.target.value)}
                 placeholder="e.g., 1920"
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-700 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 placeholder:text-gray-500"
               />
             </div>
 
@@ -149,7 +151,7 @@ export default function ImageCompressPage() {
                 value={maxHeight}
                 onChange={(e) => setMaxHeight(e.target.value)}
                 placeholder="e.g., 1080"
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-700 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 placeholder:text-gray-500"
               />
             </div>
           </div>

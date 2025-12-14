@@ -56,7 +56,7 @@ export default function AiSummarizePage() {
               value={text}
               onChange={(e) => setText(e.target.value)}
               placeholder="Enter text to summarize..."
-              className="w-full border border-gray-300 rounded-lg px-4 py-3 h-48 focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-700 rounded-lg px-4 py-3 h-48 focus:ring-2 focus:ring-blue-500 placeholder:text-gray-500"
             />
           </div>
 
@@ -71,7 +71,7 @@ export default function AiSummarizePage() {
               value={url}
               onChange={(e) => setUrl(e.target.value)}
               placeholder="https://example.com/article"
-              className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-700 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 placeholder:text-gray-500"
             />
           </div>
 
@@ -85,7 +85,7 @@ export default function AiSummarizePage() {
               max="1000"
               value={maxLength}
               onChange={(e) => setMaxLength(parseInt(e.target.value))}
-              className="w-32 border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
+              className="w-32 border border-gray-700 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
             />
           </div>
 

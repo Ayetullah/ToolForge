@@ -106,7 +106,7 @@ export default function ExcelCleanPage() {
                 onChange={(e) =>
                   setOptions({ ...options, removeEmptyRows: e.target.checked })
                 }
-                className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                className="w-4 h-4 text-blue-600 border-gray-700 rounded focus:ring-blue-500"
               />
               <span>Remove empty rows</span>
             </label>
@@ -120,7 +120,7 @@ export default function ExcelCleanPage() {
                     removeEmptyColumns: e.target.checked,
                   })
                 }
-                className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                className="w-4 h-4 text-blue-600 border-gray-700 rounded focus:ring-blue-500"
               />
               <span>Remove empty columns</span>
             </label>
@@ -131,7 +131,7 @@ export default function ExcelCleanPage() {
                 onChange={(e) =>
                   setOptions({ ...options, trimWhitespace: e.target.checked })
                 }
-                className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                className="w-4 h-4 text-blue-600 border-gray-700 rounded focus:ring-blue-500"
               />
               <span>Trim whitespace</span>
             </label>
@@ -145,7 +145,7 @@ export default function ExcelCleanPage() {
                     removeDuplicates: e.target.checked,
                   })
                 }
-                className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                className="w-4 h-4 text-blue-600 border-gray-700 rounded focus:ring-blue-500"
               />
               <span>Remove duplicates</span>
             </label>
@@ -159,7 +159,7 @@ export default function ExcelCleanPage() {
                     standardizeFormats: e.target.checked,
                   })
                 }
-                className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                className="w-4 h-4 text-blue-600 border-gray-700 rounded focus:ring-blue-500"
               />
               <span>Standardize formats</span>
             </label>
@@ -174,7 +174,7 @@ export default function ExcelCleanPage() {
               onChange={(e) =>
                 setOptions({ ...options, outputFormat: e.target.value })
               }
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 text-gray-900 bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full border border-gray-700 rounded-lg px-4 py-2 text-gray-900 bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             >
               <option value="xlsx">XLSX</option>
               <option value="xls">XLS</option>
