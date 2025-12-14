@@ -15,7 +15,8 @@ export default function Navigation() {
 
   useEffect(() => {
     // Check authentication status
-    const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    const token =
+      typeof window !== "undefined" ? localStorage.getItem("token") : null;
     if (token) {
       setIsAuthenticated(true);
       const userRole = getUserRoleFromToken(token);
@@ -50,12 +51,16 @@ export default function Navigation() {
 
   return (
     <nav className="flex gap-6 items-center">
-      <Link href="/tools" className="text-gray-700 hover:text-gray-900 font-medium">
+      <Link
+        href="/tools"
+        className="text-gray-700 hover:text-gray-900 font-medium"
+      >
         Tools
       </Link>
-      <Link href="/pricing" className="text-gray-700 hover:text-gray-900 font-medium">
+      {/* Pricing temporarily disabled */}
+      {/* <Link href="/pricing" className="text-gray-700 hover:text-gray-900 font-medium">
         Pricing
-      </Link>
+      </Link> */}
       {isAuthenticated ? (
         <>
           {isAdmin && (
@@ -66,7 +71,10 @@ export default function Navigation() {
               Admin
             </Link>
           )}
-          <Link href="/dashboard" className="text-gray-700 hover:text-gray-900 font-medium">
+          <Link
+            href="/dashboard"
+            className="text-gray-700 hover:text-gray-900 font-medium"
+          >
             Dashboard
           </Link>
           <button
@@ -79,7 +87,10 @@ export default function Navigation() {
         </>
       ) : (
         <>
-          <Link href="/login" className="text-gray-700 hover:text-gray-900 font-medium">
+          <Link
+            href="/login"
+            className="text-gray-700 hover:text-gray-900 font-medium"
+          >
             Login
           </Link>
           <Link
@@ -93,4 +104,3 @@ export default function Navigation() {
     </nav>
   );
 }
-

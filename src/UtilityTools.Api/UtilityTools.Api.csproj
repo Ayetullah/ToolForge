@@ -34,4 +34,10 @@
     <ProjectReference Include="..\UtilityTools.Infrastructure\UtilityTools.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="logs\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="logs\" />
+  </ItemGroup>
 </Project>

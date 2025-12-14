@@ -12,6 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using UtilityTools.Api.Endpoints;
+using UtilityTools.Api.Filters;
 using UtilityTools.Api.Middleware;
 using UtilityTools.Infrastructure;
 using UtilityTools.Infrastructure.Persistence;
@@ -257,6 +258,14 @@ app.UseAuthorization();
 // ✅ Response caching - must be after authentication/authorization
 app.UseResponseCaching();
 
+// Hangfire Dashboard (must be after authentication/authorization)
+app.UseHangfireDashboard("/hangfire", new DashboardOptions
+{
+    Authorization = new[] { new HangfireAuthorizationFilter(app.Environment) },
+    DashboardTitle = "UtilityTools Background Jobs",
+    StatsPollingInterval = 2000
+});
+
 // ✅ Health checks with detailed responses
 app.MapHealthChecks("/health/live", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
 {
@@ -314,6 +323,33 @@ using (var scope = app.Services.CreateScope())
         logger.LogInformation("Applying database migrations...");
         await dbContext.Database.MigrateAsync();
         logger.LogInformation("Database migrations applied successfully");
+
+        // Clear Hangfire jobs in development (for testing)
+        if (app.Environment.IsDevelopment())
+        {
+            logger.LogInformation("Clearing Hangfire jobs for fresh start...");
+            try
+            {
+                // Use SQL to delete all jobs (more efficient)
+                // This clears all job states: Succeeded, Failed, Processing, Enqueued, Scheduled
+                var deletedCount = await dbContext.Database.ExecuteSqlRawAsync(
+                    @"DELETE FROM hangfire.job");
+                
+                // Also clear job state history
+                await dbContext.Database.ExecuteSqlRawAsync(
+                    @"DELETE FROM hangfire.state");
+                
+                // Clear job parameters
+                await dbContext.Database.ExecuteSqlRawAsync(
+                    @"DELETE FROM hangfire.jobparameter");
+                
+                logger.LogInformation("Cleared all Hangfire jobs and related data. Deleted {Count} jobs.", deletedCount);
+            }
+            catch (Exception ex)
+            {
+                logger.LogWarning(ex, "Failed to clear Hangfire jobs, continuing anyway. Error: {Error}", ex.Message);
+            }
+        }
 
         // Seed initial data
         var seeder = services.GetRequiredService<DatabaseSeeder>();

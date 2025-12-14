@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using UtilityTools.Domain.Interfaces;
 using UtilityTools.Application.Common.Interfaces;
 using UtilityTools.Shared.Extensions;
+using UtilityTools.Domain.Enums;
 
 namespace UtilityTools.Application.Features.Jobs.Queries.GetJobStatus;
 
@@ -35,7 +36,8 @@ public class GetJobStatusQueryHandler : IRequestHandler<GetJobStatusQuery, GetJo
             return new GetJobStatusResponse
             {
                 JobId = request.JobId,
-                Status = "not_found",
+                Status = (int)JobStatus.NotFound,
+                StatusName = GetJobStatusResponse.StatusNotFound,
                 ErrorMessage = $"Job with ID {request.JobId} not found"
             };
         }
@@ -46,23 +48,31 @@ public class GetJobStatusQueryHandler : IRequestHandler<GetJobStatusQuery, GetJo
             return new GetJobStatusResponse
             {
                 JobId = request.JobId,
-                Status = "unauthorized",
+                Status = (int)JobStatus.Unauthorized,
+                StatusName = GetJobStatusResponse.StatusUnauthorized,
                 ErrorMessage = "You do not have access to this job"
             };
         }
 
-        return new GetJobStatusResponse
+        var response = new GetJobStatusResponse
         {
             JobId = job.Id,
-            Status = job.Status.ToString().ToLower(),
+            Status = (int)job.Status, // Return enum as int
+            StatusName = job.Status.ToString().ToLower(), // Human-readable name for backward compatibility
             ProgressPercentage = job.ProgressPercentage,
             OutputFileKey = job.OutputFileKey,
             DownloadUrl = job.SignedDownloadUrl,
+            SignedDownloadUrl = job.SignedDownloadUrl,
             ErrorMessage = job.ErrorMessage,
             StartedAt = job.StartedAt,
             CompletedAt = job.CompletedAt,
             SignedUrlExpiresAt = job.SignedUrlExpiresAt
         };
+        
+        _logger.LogDebug("Job status query for {JobId}: Status={Status} ({StatusName}), HasDownloadUrl={HasUrl}", 
+            request.JobId, response.Status, response.StatusName, !string.IsNullOrEmpty(response.SignedDownloadUrl));
+        
+        return response;
     }
 }
 

@@ -36,6 +36,32 @@ export default function ToolsGrid() {
     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
       {tools.map((tool, index) => {
         const Icon = tool.icon;
+        const isPremium = tool.premium === true;
+        const isDisabled = isPremium;
+
+        if (isDisabled) {
+          return (
+            <div
+              key={index}
+              className="bg-white rounded-lg shadow p-6 opacity-50 cursor-not-allowed border-2 border-gray-200"
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
+                  <Icon className="w-6 h-6 text-gray-600" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-semibold text-lg text-gray-800">
+                    {tool.name}
+                  </h3>
+                  <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded font-medium">
+                    Premium (Coming Soon)
+                  </span>
+                </div>
+              </div>
+            </div>
+          );
+        }
+
         return (
           <Link
             key={index}
@@ -47,12 +73,9 @@ export default function ToolsGrid() {
                 <Icon className="w-6 h-6 text-blue-600" />
               </div>
               <div className="flex-1">
-                <h3 className="font-semibold text-lg text-gray-900">{tool.name}</h3>
-                {tool.premium && (
-                  <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded font-medium">
-                    Premium
-                  </span>
-                )}
+                <h3 className="font-semibold text-lg text-gray-900">
+                  {tool.name}
+                </h3>
               </div>
             </div>
           </Link>
@@ -61,4 +84,3 @@ export default function ToolsGrid() {
     </div>
   );
 }
-

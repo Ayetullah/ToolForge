@@ -178,7 +178,7 @@ export default function ImageCompressPage() {
         </div>
 
         <div className="mt-8 p-4 bg-blue-50 rounded-lg">
-          <h3 className="font-semibold mb-2">Tips:</h3>
+          <h3 className="font-semibold mb-2 text-gray-900">Tips:</h3>
           <ul className="list-disc list-inside space-y-1 text-sm text-gray-800">
             <li>
               Lower quality = smaller file size, but may reduce image quality

@@ -10,12 +10,19 @@ public class JobConfiguration : IEntityTypeConfiguration<Job>
     public void Configure(EntityTypeBuilder<Job> builder)
     {
         builder.HasKey(j => j.Id);
+        builder.Property(j => j.UserId).IsRequired(false); // Allow null for anonymous users
         builder.Property(j => j.ToolType).HasConversion<string>();
         builder.Property(j => j.Status).HasConversion<string>();
         builder.Property(j => j.Parameters)
             .HasConversion(
                 v => JsonSerializer.Serialize(v, (JsonSerializerOptions?)null),
                 v => JsonSerializer.Deserialize<Dictionary<string, object>>(v, (JsonSerializerOptions?)null) ?? new Dictionary<string, object>());
+        
+        // Optional relationship with User (for anonymous jobs)
+        builder.HasOne(j => j.User)
+            .WithMany(u => u.Jobs)
+            .HasForeignKey(j => j.UserId)
+            .OnDelete(DeleteBehavior.SetNull); // Set null on user delete instead of cascade
     }
 }
 

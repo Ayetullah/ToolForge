@@ -8,8 +8,8 @@ namespace UtilityTools.Domain.Entities;
 /// </summary>
 public class Job : BaseEntity
 {
-    public Guid UserId { get; private set; }
-    public User User { get; private set; } = null!;
+    public Guid? UserId { get; private set; }
+    public User? User { get; private set; }
     public ToolType ToolType { get; private set; }
     public JobStatus Status { get; private set; } = JobStatus.Pending;
     public string? InputFileKey { get; private set; }
@@ -24,7 +24,7 @@ public class Job : BaseEntity
 
     private Job() { }
 
-    public Job(Guid userId, ToolType toolType, string? inputFileKey, Dictionary<string, object>? parameters = null)
+    public Job(Guid? userId, ToolType toolType, string? inputFileKey, Dictionary<string, object>? parameters = null)
     {
         UserId = userId;
         ToolType = toolType;

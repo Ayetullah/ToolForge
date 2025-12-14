@@ -25,9 +25,7 @@ tests/
 ### Prerequisites
 
 - .NET 8 SDK
-- Docker & Docker Compose
 - PostgreSQL 16+ (or use Docker)
-- MinIO (or use Docker)
 
 ### Local Development Setup
 
@@ -43,9 +41,9 @@ tests/
    # Edit .env with your configuration
    ```
 
-3. **Start infrastructure services**
+3. **Start infrastructure services (optional - if using Docker)**
    ```bash
-   docker-compose up -d postgres minio
+   docker-compose up -d postgres
    ```
 
 4. **Run database migrations**
@@ -74,7 +72,6 @@ docker-compose up --build
 
 This will start:
 - PostgreSQL (port 5432)
-- MinIO (ports 9000, 9001)
 - API (port 8080)
 
 **Note:** The application uses in-memory caching instead of Redis for simplicity. For production environments requiring distributed caching, consider implementing Redis or another distributed cache solution.
@@ -147,7 +144,7 @@ Key configuration options in `.env`:
 
 - **Database**: PostgreSQL connection string
 - **JWT**: Secret key, issuer, audience, expiration
-- **File Storage**: Local, S3, or MinIO configuration
+- **File Storage**: Local file storage configuration
 - **Stripe**: API keys for payment processing
 - **AI Services**: OpenAI or Gemini API keys
 - **Rate Limiting**: Request limits per tier

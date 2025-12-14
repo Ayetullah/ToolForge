@@ -1,6 +1,7 @@
 using Hangfire;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using UtilityTools.Application.Jobs;
 using UtilityTools.Domain.Entities;
@@ -32,8 +33,9 @@ public class ConvertDocToPdfCommandHandler : IRequestHandler<ConvertDocToPdfComm
 
     public async Task<ConvertDocToPdfResponse> Handle(ConvertDocToPdfCommand request, CancellationToken cancellationToken)
     {
-        var userId = _httpContextAccessor.HttpContext?.User.GetUserId()
-            ?? throw new UnauthorizedAccessException("User not authenticated");
+        // User context is optional for free tools
+        var userId = _httpContextAccessor.HttpContext?.User.GetUserId();
+        var isAuthenticated = userId.HasValue;
 
         var originalSize = request.File.Length;
 
@@ -43,17 +45,18 @@ public class ConvertDocToPdfCommandHandler : IRequestHandler<ConvertDocToPdfComm
             // For now, we'll create a job record and return immediately
             // The actual conversion will be handled by a worker process
 
-            // Save the uploaded file temporarily
+            // Save the uploaded file temporarily (use anonymous path if not authenticated)
             using var inputStream = request.File.OpenReadStream();
             var tempFileName = $"temp_{Guid.NewGuid()}{Path.GetExtension(request.File.FileName)}";
+            var storagePath = isAuthenticated ? $"document/temp/{userId}" : "document/temp/anonymous";
             var tempFileKey = await _fileStorage.UploadAsync(
                 inputStream,
                 tempFileName,
                 request.File.ContentType,
-                $"document/temp/{userId}",
+                storagePath,
                 cancellationToken);
 
-            // Create a job record
+            // Create a job record (userId can be null for anonymous users)
             var parameters = new Dictionary<string, object>
             {
                 { "OriginalFileName", request.File.FileName },
@@ -61,6 +64,7 @@ public class ConvertDocToPdfCommandHandler : IRequestHandler<ConvertDocToPdfComm
                 { "ContentType", request.File.ContentType }
             };
 
+            // Create job (UserId can be null for anonymous users)
             var job = new Job(userId, ToolType.DocToPdf, tempFileKey, parameters);
 
             var jobRepository = _unitOfWork.Repository<Job>();
@@ -71,9 +75,9 @@ public class ConvertDocToPdfCommandHandler : IRequestHandler<ConvertDocToPdfComm
                 "Document to PDF conversion job created. User: {UserId}, JobId: {JobId}, File: {FileName}, Size: {Size} bytes",
                 userId, job.Id, request.File.FileName, originalSize);
 
-              // Enqueue job to Hangfire
-              BackgroundJob.Enqueue<JobProcessors>(
-                  x => x.ProcessDocumentConversion(job.Id, CancellationToken.None));
+            // Enqueue job to Hangfire
+            BackgroundJob.Enqueue<JobProcessors>(
+                x => x.ProcessDocumentConversion(job.Id, CancellationToken.None));
 
             return new ConvertDocToPdfResponse
             {

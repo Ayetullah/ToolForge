@@ -103,6 +103,24 @@ public class RemoveBackgroundCommandHandler : IRequestHandler<RemoveBackgroundCo
                     ErrorMessage = "Premium subscription required. Please upgrade to Pro tier."
                 };
             }
+            
+            // Check daily usage limit for premium features
+            var (hasLimit, currentUsage, dailyLimit, canUse) = await subscriptionService
+                .CheckDailyUsageLimitAsync(userId, ToolType.ImageRemoveBackground, cancellationToken);
+            
+            if (hasLimit && !canUse)
+            {
+                job.Fail($"Günlük kullanım limitiniz doldu. Premium özellikler için günde {dailyLimit} işlem yapabilirsiniz. Bugün {currentUsage}/{dailyLimit} kullanım yaptınız.");
+                await jobRepository.UpdateAsync(job, cancellationToken);
+                await _unitOfWork.SaveChangesAsync(cancellationToken);
+                
+                return new RemoveBackgroundResponse
+                {
+                    Status = "failed",
+                    OriginalSizeBytes = originalSize,
+                    ErrorMessage = $"Günlük kullanım limitiniz doldu. Premium özellikler için günde {dailyLimit} işlem yapabilirsiniz. Bugün {currentUsage}/{dailyLimit} kullanım yaptınız."
+                };
+            }
 
               // Enqueue job to Hangfire
               BackgroundJob.Enqueue<JobProcessors>(

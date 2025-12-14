@@ -28,11 +28,7 @@ RUN dotnet publish "UtilityTools.Api.csproj" -c Release -o /app/publish /p:UseAp
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
 
-# Install FFmpeg for video processing (if needed)
-RUN apt-get update && \
-    apt-get install -y ffmpeg && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+# System dependencies (FFmpeg removed - video compression not implemented)
 
 # Copy published files
 COPY --from=publish /app/publish .

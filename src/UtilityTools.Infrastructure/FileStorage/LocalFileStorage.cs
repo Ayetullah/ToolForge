@@ -56,7 +56,24 @@ public class LocalFileStorage : IFileStorage
         
         if (!File.Exists(fullPath))
         {
-            throw new FileNotFoundException($"File not found: {fileKey}");
+            // Log additional information for debugging
+            _logger.LogWarning(
+                "File not found. FileKey: {FileKey}, FullPath: {FullPath}, BasePath: {BasePath}, Exists: {Exists}",
+                fileKey, fullPath, _basePath, File.Exists(fullPath));
+            
+            // Try to find the file with different path separators
+            var normalizedKey = fileKey.Replace('\\', Path.DirectorySeparatorChar).Replace('/', Path.DirectorySeparatorChar);
+            var alternativePath = Path.Combine(_basePath, normalizedKey);
+            
+            if (File.Exists(alternativePath))
+            {
+                _logger.LogInformation("Found file using normalized path: {Path}", alternativePath);
+                fullPath = alternativePath;
+            }
+            else
+            {
+                throw new FileNotFoundException($"File not found: {fileKey}. Searched paths: {fullPath}, {alternativePath}");
+            }
         }
 
         var memoryStream = new MemoryStream();
@@ -142,7 +159,11 @@ public class LocalFileStorage : IFileStorage
 
     private string GetFullPath(string fileKey)
     {
-        return Path.Combine(_basePath, fileKey);
+        // Normalize path separators
+        var normalizedKey = fileKey.Replace('\\', Path.DirectorySeparatorChar).Replace('/', Path.DirectorySeparatorChar);
+        // Remove leading separators to avoid issues with Path.Combine
+        normalizedKey = normalizedKey.TrimStart(Path.DirectorySeparatorChar);
+        return Path.Combine(_basePath, normalizedKey);
     }
 
     private string GenerateFileKey(string fileName, string? folder)

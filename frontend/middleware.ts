@@ -2,7 +2,9 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 // Protected routes that require authentication
-const protectedRoutes = ["/dashboard", "/admin", "/tools"];
+// Note: /tools routes are now free (no authentication required)
+// Individual tool pages can be accessed without login
+const protectedRoutes = ["/dashboard", "/admin"];
 // Admin-only routes
 const adminRoutes = ["/admin"];
 

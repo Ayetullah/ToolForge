@@ -11,9 +11,10 @@ export default function HomePage() {
 
   useEffect(() => {
     // Check if user is authenticated
-    const token = typeof window !== "undefined" 
-      ? (localStorage.getItem("token") || sessionStorage.getItem("token"))
-      : null;
+    const token =
+      typeof window !== "undefined"
+        ? localStorage.getItem("token") || sessionStorage.getItem("token")
+        : null;
     setIsAuthenticated(!!token);
   }, []);
   const tools = [
@@ -53,18 +54,20 @@ export default function HomePage() {
       href: "/tools/regex-generate",
       icon: "🔍",
     },
-    {
-      name: "Doc to PDF",
-      description: "Convert documents to PDF",
-      href: "/tools/doc-to-pdf",
-      icon: "📑",
-    },
-    {
-      name: "Remove Background",
-      description: "Remove image backgrounds",
-      href: "/tools/remove-background",
-      icon: "🎨",
-    },
+    // Premium features temporarily disabled
+    // {
+    //   name: "Doc to PDF",
+    //   description:
+    //     "Convert Word (.docx, .doc) and Excel (.xlsx, .xls, .csv) to PDF",
+    //   href: "/tools/doc-to-pdf",
+    //   icon: "📑",
+    // },
+    // {
+    //   name: "Remove Background",
+    //   description: "Remove image backgrounds",
+    //   href: "/tools/remove-background",
+    //   icon: "🎨",
+    // },
   ];
 
   const features = [
@@ -148,7 +151,9 @@ export default function HomePage() {
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <feature.icon className="w-8 h-8 text-blue-600" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">{feature.title}</h3>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                {feature.title}
+              </h3>
               <p className="text-gray-700">{feature.description}</p>
             </div>
           ))}
@@ -157,24 +162,30 @@ export default function HomePage() {
 
       {/* Tools Grid */}
       <section className="container mx-auto px-4 py-16">
-        <h2 className="text-3xl font-bold text-gray-900 text-center mb-12">All Tools</h2>
+        <h2 className="text-3xl font-bold text-gray-900 text-center mb-12">
+          All Tools
+        </h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {tools.map((tool, index) => (
-            <Link
-              key={index}
-              href={tool.href}
-              className="border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-shadow hover:border-blue-300"
-            >
-              <div className="text-4xl mb-4">{tool.icon}</div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">{tool.name}</h3>
-              <p className="text-gray-700">{tool.description}</p>
-            </Link>
-          ))}
+          {tools
+            .filter((tool) => tool.href) // Filter out commented premium features
+            .map((tool, index) => (
+              <Link
+                key={index}
+                href={tool.href}
+                className="border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-shadow hover:border-blue-300"
+              >
+                <div className="text-4xl mb-4">{tool.icon}</div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                  {tool.name}
+                </h3>
+                <p className="text-gray-700">{tool.description}</p>
+              </Link>
+            ))}
         </div>
       </section>
 
-      {/* Pricing CTA */}
-      <section className="bg-blue-600 text-white py-16">
+      {/* Pricing CTA - Temporarily disabled */}
+      {/* <section className="bg-blue-600 text-white py-16">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold mb-4">Ready to Get Started?</h2>
           <p className="text-xl mb-8 text-blue-100">
@@ -187,7 +198,7 @@ export default function HomePage() {
             View Pricing
           </Link>
         </div>
-      </section>
+      </section> */}
 
       {/* Footer */}
       <footer className="border-t bg-gray-50 py-12">
@@ -227,11 +238,12 @@ export default function HomePage() {
             <div>
               <h4 className="font-semibold mb-4">Company</h4>
               <ul className="space-y-2 text-gray-700">
-                <li>
+                {/* Pricing temporarily disabled */}
+                {/* <li>
                   <Link href="/pricing" className="hover:text-blue-600">
                     Pricing
                   </Link>
-                </li>
+                </li> */}
                 <li>
                   <Link href="/about" className="hover:text-blue-600">
                     About

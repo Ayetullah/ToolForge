@@ -91,7 +91,7 @@ export default function JsonFormatPage() {
         {result && result.formattedJson && (
           <div className="mt-6">
             <div className="flex justify-between items-center mb-2">
-              <h3 className="font-semibold">Formatted JSON:</h3>
+              <h3 className="font-semibold text-gray-900">Formatted JSON:</h3>
               <button
                 onClick={handleCopy}
                 className="flex items-center gap-2 text-blue-600 hover:text-blue-700"

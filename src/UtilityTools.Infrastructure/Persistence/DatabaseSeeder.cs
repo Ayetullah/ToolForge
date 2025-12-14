@@ -161,6 +161,38 @@ public class DatabaseSeeder
 
     private async Task SeedUserDataAsync(CancellationToken cancellationToken)
     {
+        // First, clean up any invalid ToolType values (e.g., VideoCompress which was removed)
+        // Use raw SQL to avoid EF Core enum conversion errors when reading invalid enum values
+        var validToolTypes = Enum.GetValues<ToolType>().Select(e => e.ToString()).ToList();
+        
+        // Build SQL with proper quoting for PostgreSQL string literals
+        var validToolTypesSql = string.Join(",", validToolTypes.Select(t => $"'{t.Replace("'", "''")}'"));
+        
+        // Delete invalid UsageRecords using raw SQL
+        // Note: validToolTypes comes from enum values, not user input, so this is safe
+#pragma warning disable EF1000 // SQL injection warning - safe because values come from enum, not user input
+        var deletedUsageRecords = await _context.Database.ExecuteSqlRawAsync(
+            $@"DELETE FROM ""UsageRecords"" WHERE ""ToolType"" NOT IN ({validToolTypesSql})",
+            cancellationToken);
+#pragma warning restore EF1000
+        
+        if (deletedUsageRecords > 0)
+        {
+            _logger.LogWarning("Deleted {Count} UsageRecords with invalid ToolType values using raw SQL.", deletedUsageRecords);
+        }
+        
+        // Delete invalid Jobs using raw SQL
+#pragma warning disable EF1000 // SQL injection warning - safe because values come from enum, not user input
+        var deletedJobs = await _context.Database.ExecuteSqlRawAsync(
+            $@"DELETE FROM ""Jobs"" WHERE ""ToolType"" NOT IN ({validToolTypesSql})",
+            cancellationToken);
+#pragma warning restore EF1000
+        
+        if (deletedJobs > 0)
+        {
+            _logger.LogWarning("Deleted {Count} Jobs with invalid ToolType values using raw SQL.", deletedJobs);
+        }
+        
         var allUsers = await _context.Users
             .Include(u => u.UsageRecords)
             .Include(u => u.Jobs)
@@ -170,8 +202,12 @@ public class DatabaseSeeder
 
         foreach (var user in allUsers)
         {
-            // Skip if user already has seed data
-            if (user.UsageRecords.Any() || user.Jobs.Any())
+            // Filter out invalid ToolType records from navigation properties
+            var validUsageRecords = user.UsageRecords.Where(ur => validToolTypes.Contains(ur.ToolType.ToString())).ToList();
+            var validJobs = user.Jobs.Where(j => validToolTypes.Contains(j.ToolType.ToString())).ToList();
+            
+            // Skip if user already has valid seed data
+            if (validUsageRecords.Any() || validJobs.Any())
             {
                 _logger.LogInformation("User {Email} already has data, skipping", user.Email);
                 continue;

@@ -26,18 +26,22 @@ public class SmtpEmailService : IEmailService
     {
         _configuration = configuration;
         _logger = logger;
-        _smtpHost = configuration["Email:SMTP:Host"] 
-            ?? throw new InvalidOperationException("Email:SMTP:Host is required");
+        
+        // Email settings are optional - if not configured, email sending will be skipped
+        _smtpHost = configuration["Email:SMTP:Host"] ?? string.Empty;
         _smtpPort = configuration.GetValue<int>("Email:SMTP:Port", 587);
-        _smtpUsername = configuration["Email:SMTP:Username"] 
-            ?? throw new InvalidOperationException("Email:SMTP:Username is required");
-        _smtpPassword = configuration["Email:SMTP:Password"] 
-            ?? throw new InvalidOperationException("Email:SMTP:Password is required");
+        _smtpUsername = configuration["Email:SMTP:Username"] ?? string.Empty;
+        _smtpPassword = configuration["Email:SMTP:Password"] ?? string.Empty;
         _enableSsl = configuration.GetValue<bool>("Email:SMTP:EnableSSL", true);
-        _fromAddress = configuration["Email:FromAddress"] 
-            ?? throw new InvalidOperationException("Email:FromAddress is required");
+        _fromAddress = configuration["Email:FromAddress"] ?? string.Empty;
         _fromName = configuration["Email:FromName"] ?? "UtilityTools";
         _baseUrl = configuration["BaseUrl"] ?? "http://localhost:5000";
+        
+        // Log warning if email is not configured (but don't throw exception)
+        if (string.IsNullOrEmpty(_smtpHost) || string.IsNullOrEmpty(_smtpUsername) || string.IsNullOrEmpty(_fromAddress))
+        {
+            _logger.LogWarning("Email service is not fully configured. Email sending will be skipped. Please configure Email:SMTP settings in appsettings.json");
+        }
     }
 
     public async Task SendEmailAsync(
@@ -47,6 +51,13 @@ public class SmtpEmailService : IEmailService
         string? htmlBody = null,
         CancellationToken cancellationToken = default)
     {
+        // Skip email sending if not configured
+        if (string.IsNullOrEmpty(_smtpHost) || string.IsNullOrEmpty(_smtpUsername) || string.IsNullOrEmpty(_fromAddress))
+        {
+            _logger.LogWarning("Email service not configured. Skipping email send to {To}. Subject: {Subject}", to, subject);
+            return;
+        }
+        
         try
         {
             using var client = new SmtpClient(_smtpHost, _smtpPort)
@@ -71,7 +82,8 @@ public class SmtpEmailService : IEmailService
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error sending email to {To}", to);
-            throw;
+            // Don't throw - email sending failure shouldn't break the application
+            // throw;
         }
     }
 

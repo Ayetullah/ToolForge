@@ -119,7 +119,7 @@ export default function PdfSplitPage() {
         </div>
 
         <div className="mt-8 p-4 bg-blue-50 rounded-lg">
-          <h3 className="font-semibold mb-2">How it works:</h3>
+          <h3 className="font-semibold mb-2 text-gray-900">How it works:</h3>
           <ol className="list-decimal list-inside space-y-1 text-sm text-gray-800">
             <li>Select a PDF file to split</li>
             <li>

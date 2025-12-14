@@ -13,7 +13,6 @@ public enum ToolType
     ExcelClean = 6,
     AiSummarize = 7,
     JsonFormat = 8,
-    RegexGenerate = 9,
-    VideoCompress = 10
+    RegexGenerate = 9
 }
 

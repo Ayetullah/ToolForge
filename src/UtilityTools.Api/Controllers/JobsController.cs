@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UtilityTools.Application.Features.Jobs.Queries.GetJobStatus;
+using UtilityTools.Domain.Enums;
 
 namespace UtilityTools.Api.Controllers;
 
@@ -25,14 +26,14 @@ public class JobsController : ControllerBase
         var query = new GetJobStatusQuery { JobId = jobId };
         var result = await _mediator.Send(query);
         
-        // Handle error responses
+        // Handle error responses using JobStatus enum
         if (!string.IsNullOrEmpty(result.ErrorMessage))
         {
-            if (result.Status == "not_found")
+            if ((JobStatus)result.Status == JobStatus.NotFound)
             {
                 return NotFound(new { error = result.ErrorMessage, jobId = result.JobId });
             }
-            if (result.Status == "unauthorized")
+            if ((JobStatus)result.Status == JobStatus.Unauthorized)
             {
                 return Unauthorized(new { error = result.ErrorMessage, jobId = result.JobId });
             }

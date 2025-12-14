@@ -38,16 +38,17 @@ public class MergePdfCommandHandler : IRequestHandler<MergePdfCommand, MergePdfR
 
     public async Task<MergePdfResponse> Handle(MergePdfCommand request, CancellationToken cancellationToken)
     {
-        var userId = _httpContextAccessor.HttpContext?.User.GetUserId() 
-            ?? throw new UnauthorizedAccessException("User not authenticated");
+        // User context is optional for free tools
+        var userId = _httpContextAccessor.HttpContext?.User.GetUserId();
+        var isAuthenticated = userId.HasValue;
 
         var startTime = DateTime.UtcNow;
         var totalSize = request.Files.Sum(f => f.Length);
 
-        // Check if should process as background job
-        if (totalSize > MaxSyncFileSize)
+        // Check if should process as background job (only for authenticated users)
+        if (isAuthenticated && totalSize > MaxSyncFileSize)
         {
-            return await ProcessAsBackgroundJob(request, userId, cancellationToken);
+            return await ProcessAsBackgroundJob(request, userId!.Value, cancellationToken);
         }
 
         // Process synchronously
@@ -57,12 +58,13 @@ public class MergePdfCommandHandler : IRequestHandler<MergePdfCommand, MergePdfR
             mergedPdf = MergePdfFiles(request.Files);
             var mergedPdfLength = mergedPdf.Length;
             
-            // Upload merged PDF
+            // Upload merged PDF (use anonymous path if not authenticated)
+            var storagePath = isAuthenticated ? $"pdf/merge/{userId}" : "pdf/merge/anonymous";
             var fileKey = await _fileStorage.UploadAsync(
                 mergedPdf,
                 "merged.pdf",
                 "application/pdf",
-                $"pdf/merge/{userId}",
+                storagePath,
                 cancellationToken);
 
             // Generate download URL
@@ -73,21 +75,24 @@ public class MergePdfCommandHandler : IRequestHandler<MergePdfCommand, MergePdfR
 
             var processingTime = (int)(DateTime.UtcNow - startTime).TotalMilliseconds;
 
-            // Record usage
-            var usageRepository = _unitOfWork.Repository<UsageRecord>();
-            var usageRecord = new UsageRecord(
-                userId,
-                ToolType.PdfMerge,
-                fileSizeBytes: totalSize,
-                processingTimeMs: processingTime,
-                cost: 0m);
+            // Record usage only for authenticated users
+            if (isAuthenticated)
+            {
+                var usageRepository = _unitOfWork.Repository<UsageRecord>();
+                var usageRecord = new UsageRecord(
+                    userId!.Value,
+                    ToolType.PdfMerge,
+                    fileSizeBytes: totalSize,
+                    processingTimeMs: processingTime,
+                    cost: 0m);
 
-            await usageRepository.AddAsync(usageRecord, cancellationToken);
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
+                await usageRepository.AddAsync(usageRecord, cancellationToken);
+                await _unitOfWork.SaveChangesAsync(cancellationToken);
+            }
 
             _logger.LogInformation(
                 "PDF merge completed. User: {UserId}, Files: {Count}, Size: {Size} bytes, Time: {Time}ms",
-                userId, request.Files.Count, totalSize, processingTime);
+                userId?.ToString() ?? "anonymous", request.Files.Count, totalSize, processingTime);
 
             return new MergePdfResponse
             {

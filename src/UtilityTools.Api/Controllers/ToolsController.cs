@@ -11,7 +11,6 @@ using UtilityTools.Application.Features.Tools.Json.Commands.FormatJson;
 using UtilityTools.Application.Features.Tools.Pdf.Commands.MergePdf;
 using UtilityTools.Application.Features.Tools.Pdf.Commands.SplitPdf;
 using UtilityTools.Application.Features.Tools.Regex.Commands.GenerateRegex;
-using UtilityTools.Application.Features.Tools.Video.Commands.CompressVideo;
 
 namespace UtilityTools.Api.Controllers;
 
@@ -19,7 +18,6 @@ namespace UtilityTools.Api.Controllers;
 [Route("api/tools")]
 [Route("api/v{version:apiVersion}/tools")] // ✅ Support both versioned and non-versioned routes
 [ApiVersion("1.0")]
-[Authorize]
 public class ToolsController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -30,6 +28,7 @@ public class ToolsController : ControllerBase
     }
 
     [HttpPost("pdf/merge")]
+    [AllowAnonymous] // Free tool - no authentication required
     public async Task<ActionResult<MergePdfResponse>> MergePdf([FromForm] List<IFormFile> files)
     {
         if (files == null || files.Count < 2)
@@ -43,6 +42,7 @@ public class ToolsController : ControllerBase
     }
 
     [HttpPost("pdf/split")]
+    [AllowAnonymous] // Free tool - no authentication required
     public async Task<ActionResult<SplitPdfResponse>> SplitPdf([FromForm] IFormFile file, [FromForm] string? pagesSpec = "all")
     {
         if (file == null)
@@ -56,6 +56,7 @@ public class ToolsController : ControllerBase
     }
 
     [HttpPost("image/compress")]
+    [AllowAnonymous] // Free tool - no authentication required
     public async Task<ActionResult<CompressImageResponse>> CompressImage(
         [FromForm] IFormFile file,
         [FromForm] int? quality = 80,
@@ -82,6 +83,7 @@ public class ToolsController : ControllerBase
     }
 
     [HttpPost("image/remove-background")]
+    [Authorize] // Premium tool (Pro tier) - authentication required
     public async Task<ActionResult<RemoveBackgroundResponse>> RemoveBackground(
         [FromForm] IFormFile file,
         [FromForm] bool transparent = true,
@@ -104,6 +106,7 @@ public class ToolsController : ControllerBase
     }
 
     [HttpPost("convert/doc-to-pdf")]
+    [AllowAnonymous] // Free tool - no authentication required
     public async Task<ActionResult<ConvertDocToPdfResponse>> ConvertDocToPdf([FromForm] IFormFile file)
     {
         if (file == null)
@@ -117,6 +120,7 @@ public class ToolsController : ControllerBase
     }
 
     [HttpPost("excel/clean")]
+    [AllowAnonymous] // Free tool - no authentication required
     public async Task<ActionResult<CleanExcelResponse>> CleanExcel(
         [FromForm] IFormFile file,
         [FromForm] string? removeEmptyRows = null,
@@ -152,6 +156,7 @@ public class ToolsController : ControllerBase
     }
 
     [HttpPost("json/format")]
+    [AllowAnonymous] // Free tool - no authentication required
     public async Task<ActionResult<FormatJsonResponse>> FormatJson([FromBody] FormatJsonCommand command)
     {
         // Support both 'json' (frontend) and 'text' (legacy)
@@ -169,6 +174,7 @@ public class ToolsController : ControllerBase
     }
 
     [HttpPost("ai/summarize")]
+    [AllowAnonymous] // Free tool - no authentication required
     public async Task<ActionResult<SummarizeResponse>> Summarize([FromBody] SummarizeCommand command)
     {
         var result = await _mediator.Send(command);
@@ -176,6 +182,7 @@ public class ToolsController : ControllerBase
     }
 
     [HttpPost("regex/generate")]
+    [AllowAnonymous] // Free tool - no authentication required
     public async Task<ActionResult<GenerateRegexResponse>> GenerateRegex([FromBody] GenerateRegexCommand command)
     {
         var result = await _mediator.Send(command);
@@ -186,38 +193,5 @@ public class ToolsController : ControllerBase
         return Ok(result);
     }
 
-    [HttpPost("video/compress")]
-    public async Task<ActionResult<CompressVideoResponse>> CompressVideo(
-        [FromForm] IFormFile file,
-        [FromForm] int? crf = null,
-        [FromForm] int? quality = null,
-        [FromForm] string? preset = "medium",
-        [FromForm] int? maxWidth = null,
-        [FromForm] int? maxHeight = null,
-        [FromForm] int? bitrateKbps = null,
-        [FromForm] string? codec = "libx264")
-    {
-        if (file == null)
-        {
-            return BadRequest(new { error = "Video file is required" });
-        }
-
-        // Support both 'crf' (frontend) and 'quality' (legacy)
-        var qualityValue = crf ?? quality ?? 23;
-
-        var compressCommand = new CompressVideoCommand
-        {
-            File = file,
-            Quality = qualityValue,
-            Preset = preset ?? "medium",
-            MaxWidth = maxWidth,
-            MaxHeight = maxHeight,
-            BitrateKbps = bitrateKbps,
-            Codec = codec ?? "libx264"
-        };
-
-        var result = await _mediator.Send(compressCommand);
-        return Ok(result);
-    }
 }
 

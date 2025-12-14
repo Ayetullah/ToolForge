@@ -3,7 +3,7 @@ using UtilityTools.Domain.ValueObjects;
 namespace UtilityTools.Domain.Interfaces;
 
 /// <summary>
-/// File storage abstraction for local/S3/R2/MinIO
+/// File storage abstraction for local file storage
 /// </summary>
 public interface IFileStorage
 {

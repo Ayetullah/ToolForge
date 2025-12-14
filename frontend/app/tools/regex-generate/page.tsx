@@ -109,14 +109,16 @@ export default function RegexGeneratePage() {
           {result && result.pattern && (
             <div className="mb-6 space-y-4">
               <div>
-                <h3 className="font-semibold mb-2">Pattern:</h3>
+                <h3 className="font-semibold mb-2 text-gray-900">Pattern:</h3>
                 <pre className="bg-gray-50 border border-gray-200 rounded-lg p-4 overflow-x-auto">
-                  <code>{result.pattern}</code>
+                  <code className="text-gray-900">{result.pattern}</code>
                 </pre>
               </div>
               {result.explanation && (
                 <div>
-                  <h3 className="font-semibold mb-2">Explanation:</h3>
+                  <h3 className="font-semibold mb-2 text-gray-900">
+                    Explanation:
+                  </h3>
                   <p className="text-gray-800">{result.explanation}</p>
                 </div>
               )}

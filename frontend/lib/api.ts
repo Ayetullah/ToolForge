@@ -4,6 +4,7 @@ export interface ApiResponse<T> {
   data?: T;
   error?: string;
   message?: string;
+  errors?: Record<string, string[]>;
 }
 
 // ✅ Auth API Response Types
@@ -110,8 +111,11 @@ class ApiClient {
     this.baseUrl = baseUrl;
     if (typeof window !== "undefined") {
       // Check both localStorage and sessionStorage for tokens
-      this.token = localStorage.getItem("token") || sessionStorage.getItem("token");
-      this.refreshToken = localStorage.getItem("refreshToken") || sessionStorage.getItem("refreshToken");
+      this.token =
+        localStorage.getItem("token") || sessionStorage.getItem("token");
+      this.refreshToken =
+        localStorage.getItem("refreshToken") ||
+        sessionStorage.getItem("refreshToken");
     }
   }
 
@@ -225,10 +229,31 @@ class ApiClient {
       }
 
       if (!response.ok) {
+        // Handle validation errors
+        if (data.errors && typeof data.errors === "object") {
+          const validationErrors = Object.entries(data.errors)
+            .map(([key, value]) => {
+              const errorMessages = Array.isArray(value) ? value : [value];
+              return `${key}: ${errorMessages.join(", ")}`;
+            })
+            .join("; ");
+
+          return {
+            error:
+              validationErrors ||
+              data.message ||
+              data.error ||
+              data.title ||
+              `Error ${response.status}: ${response.statusText}`,
+            errors: data.errors,
+          };
+        }
+
+        // Prioritize message over error (message contains the actual exception message)
         return {
           error:
-            data.error ||
             data.message ||
+            data.error ||
             data.title ||
             `Error ${response.status}: ${response.statusText}`,
         };
@@ -332,25 +357,32 @@ class ApiClient {
       }
 
       if (!response.ok) {
-        // Build detailed error message
-        let errorMessage =
-          data.error ||
-          data.message ||
-          data.title ||
-          `Error ${response.status}: ${response.statusText}`;
-
-        // Add validation errors if present
+        // Handle validation errors
         if (data.errors && typeof data.errors === "object") {
           const validationErrors = Object.entries(data.errors)
-            .map(
-              ([key, value]) =>
-                `${key}: ${Array.isArray(value) ? value.join(", ") : value}`
-            )
+            .map(([key, value]) => {
+              const errorMessages = Array.isArray(value) ? value : [value];
+              return `${key}: ${errorMessages.join(", ")}`;
+            })
             .join("; ");
-          if (validationErrors) {
-            errorMessage += ` (${validationErrors})`;
-          }
+
+          return {
+            error:
+              validationErrors ||
+              data.message ||
+              data.error ||
+              data.title ||
+              `Error ${response.status}: ${response.statusText}`,
+            errors: data.errors,
+          };
         }
+
+        // Prioritize message over error (message contains the actual exception message)
+        let errorMessage =
+          data.message ||
+          data.error ||
+          data.title ||
+          `Error ${response.status}: ${response.statusText}`;
 
         return {
           error: errorMessage,

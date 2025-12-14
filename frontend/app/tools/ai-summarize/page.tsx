@@ -60,7 +60,7 @@ export default function AiSummarizePage() {
             />
           </div>
 
-          <div className="text-center text-gray-700 font-medium">OR</div>
+          <div className="text-center text-gray-800 font-medium">OR</div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">

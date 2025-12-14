@@ -55,7 +55,8 @@ export default function ToolsPage() {
     },
     {
       name: "Doc to PDF",
-      description: "Convert documents to PDF",
+      description:
+        "Convert Word (.docx, .doc) and Excel (.xlsx, .xls, .csv) to PDF",
       href: "/tools/doc-to-pdf",
       icon: "📑",
       category: "Document",
@@ -76,27 +77,52 @@ export default function ToolsPage() {
       </header>
 
       <main className="container mx-auto px-4 py-12">
-        <h1 className="text-4xl font-bold mb-4">All Tools</h1>
+        <h1 className="text-4xl font-bold mb-4 text-gray-900">All Tools</h1>
         <p className="text-gray-800 mb-8">Choose a tool to get started</p>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {tools.map((tool, index) => (
-            <Link
-              key={index}
-              href={tool.href}
-              className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-shadow hover:border-blue-300 relative"
-            >
-              {tool.premium && (
-                <span className="absolute top-4 right-4 bg-yellow-400 text-yellow-900 text-xs font-semibold px-2 py-1 rounded">
-                  Premium
-                </span>
-              )}
-              <div className="text-4xl mb-4">{tool.icon}</div>
-              <div className="text-sm text-blue-600 mb-2 font-medium">{tool.category}</div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">{tool.name}</h3>
-              <p className="text-gray-700">{tool.description}</p>
-            </Link>
-          ))}
+          {tools.map((tool, index) => {
+            const isPremium = tool.premium === true;
+            const isDisabled = isPremium;
+
+            if (isDisabled) {
+              return (
+                <div
+                  key={index}
+                  className="bg-white border border-gray-200 rounded-lg p-6 opacity-50 cursor-not-allowed relative"
+                >
+                  <span className="absolute top-4 right-4 bg-yellow-400 text-yellow-900 text-xs font-semibold px-2 py-1 rounded">
+                    Premium (Coming Soon)
+                  </span>
+                  <div className="text-4xl mb-4 opacity-50">{tool.icon}</div>
+                  <div className="text-sm text-gray-600 mb-2 font-medium">
+                    {tool.category}
+                  </div>
+                  <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                    {tool.name}
+                  </h3>
+                  <p className="text-gray-700">{tool.description}</p>
+                </div>
+              );
+            }
+
+            return (
+              <Link
+                key={index}
+                href={tool.href}
+                className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-shadow hover:border-blue-300 relative"
+              >
+                <div className="text-4xl mb-4">{tool.icon}</div>
+                <div className="text-sm text-blue-600 mb-2 font-medium">
+                  {tool.category}
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                  {tool.name}
+                </h3>
+                <p className="text-gray-700">{tool.description}</p>
+              </Link>
+            );
+          })}
         </div>
       </main>
     </div>
